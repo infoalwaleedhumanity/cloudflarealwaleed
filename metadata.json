@@ -1,0 +1,6 @@
+{
+  "name": "مؤسسة الوليد للإنسانية",
+  "description": "منصة رقمية موثوقة لمؤسسة الوليد للإنسانية لتقديم ومتابعة طلبات المساعدات والبرامج والمشاريع التنموية الإنسانية",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
