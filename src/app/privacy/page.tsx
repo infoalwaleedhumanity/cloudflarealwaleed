@@ -42,43 +42,43 @@ export default function PrivacyPage() {
       <div className="page-header text-center">
         <div className="relative z-10 max-w-[1600px] w-full mx-auto px-5 md:px-10 lg:px-16 2xl:px-20">
           <div className="flex items-center justify-center gap-2 text-sm mb-4">
-            <Link href="/" className="breadcrumb-item hover:text-[#C9A84C] transition-colors" style={{fontFamily:'Cairo,sans-serif'}}>الرئيسية</Link>
+            <Link href="/" className="breadcrumb-item hover:text-[var(--gold)] transition-colors" style={{fontFamily: 'var(--font-body)'}}>الرئيسية</Link>
             <span className="text-white/30">/</span>
-            <span className="breadcrumb-item active" style={{fontFamily:'Cairo,sans-serif'}}>سياسة الخصوصية</span>
+            <span className="breadcrumb-item active" style={{fontFamily: 'var(--font-body)'}}>سياسة الخصوصية</span>
           </div>
-          <h1 className="text-white font-black mb-4" style={{fontSize:'clamp(2rem,5vw,3.5rem)',fontFamily:'Cairo,sans-serif'}}>سياسة الخصوصية</h1>
+          <h1 className="text-white font-black mb-4" style={{fontSize:'clamp(2rem,5vw,3.5rem)',fontFamily: 'var(--font-heading)'}}>سياسة الخصوصية</h1>
           <div className="gold-line mx-auto" />
-          <p className="text-white/70 mt-4" style={{fontFamily:'Cairo,sans-serif'}}>آخر تحديث: يناير 2025</p>
+          <p className="text-white/70 mt-4" style={{fontFamily: 'var(--font-body)'}}>آخر تحديث: يناير 2025</p>
         </div>
       </div>
 
       <section className="py-24">
         <div className="max-w-[1600px] w-full mx-auto px-5 md:px-10 lg:px-16 2xl:px-20">
-          <div className="rounded-3xl p-8 mb-8" style={{background:'rgba(201, 168, 76,0.06)',border:'1px solid rgba(201, 168, 76,0.2)'}}>
-            <p className="text-[#033500] leading-relaxed" style={{fontFamily:'Cairo,sans-serif'}}>
+          <div className="rounded-3xl p-8 mb-8" style={{background:'rgba(var(--accent-rgb),0.06)',border:'1px solid rgba(var(--accent-rgb),0.2)'}}>
+            <p className="text-[var(--primary)] leading-relaxed" style={{fontFamily: 'var(--font-body)'}}>
               تحرص مؤسسة الوليد للإنسانية على حماية خصوصيتك وأمان بياناتك الشخصية. تشرح هذه السياسة كيفية جمع معلوماتك واستخدامها ومشاركتها وحمايتها عند استخدامك لموقعنا الإلكتروني أو خدماتنا.
             </p>
           </div>
 
           <div className="space-y-8">
             {sections.map((section, i) => (
-              <div key={i} className="rounded-2xl overflow-hidden" style={{border:'1px solid rgba(3, 53, 0,0.08)'}}>
-                <div className="p-5 flex items-center gap-4" style={{background:'linear-gradient(135deg,rgba(3, 53, 0,0.04),rgba(201, 168, 76,0.06))'}}>
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0" style={{background:'linear-gradient(135deg,#065500,#033500)'}}>
+              <div key={i} className="rounded-2xl overflow-hidden" style={{border:'1px solid rgba(var(--primary-rgb),0.08)'}}>
+                <div className="p-5 flex items-center gap-4" style={{background:'linear-gradient(135deg,rgba(var(--primary-rgb),0.04),rgba(var(--accent-rgb),0.06))'}}>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0" style={{background:'linear-gradient(135deg,var(--info),var(--primary))'}}>
                     {i + 1}
                   </div>
-                  <h2 className="font-bold text-xl" style={{fontFamily:'Cairo,sans-serif',color:'#033500'}}>{section.title}</h2>
+                  <h2 className="font-bold text-xl" style={{fontFamily: 'var(--font-heading)',color:'var(--primary)'}}>{section.title}</h2>
                 </div>
                 <div className="p-6">
-                  <p className="text-[#033500]/80 leading-relaxed" style={{fontFamily:'Cairo,sans-serif'}}>{section.content}</p>
+                  <p className="text-[var(--primary)]/80 leading-relaxed" style={{fontFamily: 'var(--font-body)'}}>{section.content}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="mt-12 p-8 rounded-3xl text-center" style={{background:'linear-gradient(135deg,#065500,#033500)'}}>
-            <h3 className="text-white font-black text-xl mb-3" style={{fontFamily:'Cairo,sans-serif'}}>هل لديك استفسار حول خصوصيتك؟</h3>
-            <p className="text-white/70 mb-6" style={{fontFamily:'Cairo,sans-serif'}}>تواصل مع مسؤول حماية البيانات لدينا</p>
+          <div className="mt-12 p-8 rounded-3xl text-center" style={{background:'linear-gradient(135deg,var(--info),var(--primary))'}}>
+            <h3 className="text-white font-black text-xl mb-3" style={{fontFamily: 'var(--font-heading)'}}>هل لديك استفسار حول خصوصيتك؟</h3>
+            <p className="text-white/70 mb-6" style={{fontFamily: 'var(--font-body)'}}>تواصل مع مسؤول حماية البيانات لدينا</p>
             <a href="mailto:privacy@waleed-foundation.org" className="btn-primary" style={{display:'inline-flex'}}>
               privacy@waleed-foundation.org
             </a>

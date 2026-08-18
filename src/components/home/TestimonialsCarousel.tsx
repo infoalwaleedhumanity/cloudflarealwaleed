@@ -19,7 +19,7 @@ export default function TestimonialsCarousel({ stories }: { stories: Story[] }) 
     <div className="max-w-3xl mx-auto text-center space-y-8">
       <Quote className="w-9 h-9 mx-auto" style={{ color: C.green }} />
       <div className="min-h-[130px] flex items-center justify-center">
-        <p className="text-xl sm:text-2xl font-light leading-relaxed" style={{ color: C.ink }}>
+        <p className="text-xl sm:text-2xl leading-relaxed" style={{ color: C.ink, fontFamily: 'var(--font-heading)', fontWeight: 700 }}>
           {current.quote}
         </p>
       </div>
@@ -45,7 +45,7 @@ export default function TestimonialsCarousel({ stories }: { stories: Story[] }) 
                 ? { width: '2rem', height: '4px', backgroundColor: C.green }
                 : { width: '8px', height: '4px', backgroundColor: C.border }
             }
-            aria-label={`Testimonial ${idx + 1}`}
+            aria-label={`رأي رقم ${idx + 1}`}
           />
         ))}
       </div>

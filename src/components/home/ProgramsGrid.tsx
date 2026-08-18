@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, X } from 'lucide-react';
 import { C, SolidButton } from './ui';
@@ -13,6 +14,17 @@ interface Program {
   iconName?: string;
   category: string;
 }
+
+// ربط كل تصنيف بلون الهالة المناسب من الألوان الخمسة الدلالية لمجالات
+// التركيز حسب هوية العلامة (مثال المؤسسة نفسها: الاستجابة للكوارث،
+// تمكين المرأة، إلخ — كل مجال بلونه المميز)
+const CATEGORY_HALO: Record<string, 'blue' | 'green' | 'purple' | 'yellow' | 'pink'> = {
+  'إغاثة': 'blue',
+  'تنمية': 'green',
+  'تمكين': 'purple',
+  'تعليم': 'yellow',
+  'صحة': 'pink',
+};
 
 export default function ProgramsGrid({ programs }: { programs: Program[] }) {
   const [selected, setSelected] = useState<Program | null>(null);
@@ -38,26 +50,29 @@ export default function ProgramsGrid({ programs }: { programs: Program[] }) {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-        {programs.map((prog) => (
+        {programs.map((prog) => {
+          const halo = CATEGORY_HALO[prog.category] || 'green';
+          return (
           <motion.div
             key={prog.id}
             whileHover={{ y: -4 }}
             transition={{ duration: 0.3 }}
-            className="group cursor-pointer"
+            className={`group cursor-pointer halo-card halo-${halo} p-4 rounded-[var(--radius-default)]`}
             onClick={() => setSelected(prog)}
           >
-            <div className="rounded-lg overflow-hidden mb-5">
-              <img
+            <div className="rounded-[var(--radius-default)] overflow-hidden mb-5 relative h-56">
+              <Image
                 src={prog.image}
                 alt={prog.title}
-                className="w-full h-56 object-cover group-hover:scale-[1.03] transition-transform duration-500"
-                loading="lazy"
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+                className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
               />
             </div>
             <div className="flex items-center gap-2 text-xs font-bold mb-2" style={{ color: C.green }}>
               <span>{prog.category}</span>
             </div>
-            <h3 className="text-xl font-black leading-snug mb-2" style={{ color: C.ink }}>
+            <h3 className="text-xl font-black leading-snug mb-2" style={{ color: C.ink, fontFamily: 'var(--font-heading)' }}>
               {prog.title}
             </h3>
             <p className="text-sm leading-relaxed mb-4" style={{ color: C.muted }}>
@@ -75,7 +90,8 @@ export default function ProgramsGrid({ programs }: { programs: Program[] }) {
               <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
             </button>
           </motion.div>
-        ))}
+          );
+        })}
       </div>
 
       <AnimatePresence>
@@ -103,8 +119,8 @@ export default function ProgramsGrid({ programs }: { programs: Program[] }) {
               </button>
 
               <div className="space-y-6">
-                <div className="rounded-lg overflow-hidden">
-                  <img src={selected.image} alt={selected.title} className="w-full h-48 sm:h-60 object-cover" loading="lazy" />
+                <div className="rounded-lg overflow-hidden relative h-48 sm:h-60">
+                  <Image src={selected.image} alt={selected.title} fill sizes="(max-width: 640px) 100vw, 500px" className="object-cover" />
                 </div>
 
                 <div className="space-y-2">

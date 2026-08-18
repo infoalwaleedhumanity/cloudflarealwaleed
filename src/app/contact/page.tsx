@@ -6,20 +6,39 @@ import toast from 'react-hot-toast';
 import Link from 'next/link';
 import { SEO } from '@/components/SEO';
 import PhoneInput from '@/components/PhoneInput';
+import { getSupabase } from '@/lib/supabase';
+
+const EMPTY_FORM = { name: '', email: '', phone: '', subject: '', message: '' };
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
+  const [form, setForm] = useState(EMPTY_FORM);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => { 
-      setLoading(false); 
-      setSubmitted(true); 
+    try {
+      const supabase = getSupabase();
+      const { error } = await supabase.from('contact_messages').insert([
+        {
+          name: form.name.trim(),
+          email: form.email.trim(),
+          phone: form.phone || null,
+          subject: form.subject,
+          message: form.message.trim(),
+        },
+      ]);
+      if (error) throw error;
+      setSubmitted(true);
+      setForm(EMPTY_FORM);
       toast.success('تم إرسال رسالتك بنجاح!');
-    }, 1500);
+    } catch (err) {
+      console.error(err);
+      toast.error('تعذر إرسال رسالتك، يرجى المحاولة مرة أخرى.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -28,13 +47,13 @@ export default function ContactPage() {
       <div className="page-header text-center">
         <div className="relative z-10 max-w-[1600px] w-full mx-auto px-5 md:px-10 lg:px-16 2xl:px-20">
           <div className="flex items-center justify-center gap-2 text-sm mb-4">
-            <Link href="/" className="breadcrumb-item hover:text-[#C9A84C] transition-colors" style={{fontFamily:'Cairo,sans-serif'}}>الرئيسية</Link>
+            <Link href="/" className="breadcrumb-item hover:text-[var(--gold)] transition-colors" style={{fontFamily: 'var(--font-body)'}}>الرئيسية</Link>
             <span className="text-white/30">/</span>
-            <span className="breadcrumb-item active" style={{fontFamily:'Cairo,sans-serif'}}>تواصل معنا</span>
+            <span className="breadcrumb-item active" style={{fontFamily: 'var(--font-body)'}}>تواصل معنا</span>
           </div>
-          <h1 className="text-white font-black mb-4" style={{fontSize:'clamp(2rem,5vw,3.5rem)',fontFamily:'Cairo,sans-serif'}}>تواصل معنا</h1>
+          <h1 className="text-white font-black mb-4" style={{fontSize:'clamp(2rem,5vw,3.5rem)',fontFamily: 'var(--font-heading)'}}>تواصل معنا</h1>
           <div className="gold-line mx-auto" />
-          <p className="text-white/70 mt-4 text-lg" style={{fontFamily:'Cairo,sans-serif'}}>نحن هنا للإجابة على جميع استفساراتك</p>
+          <p className="text-white/70 mt-4 text-lg" style={{fontFamily: 'var(--font-body)'}}>نحن هنا للإجابة على جميع استفساراتك</p>
         </div>
       </div>
 
@@ -47,7 +66,7 @@ export default function ContactPage() {
                 <div className="section-tag"><span>📞</span> معلومات التواصل</div>
                 <h2 className="section-title mt-3 mb-2">كيف يمكنك<br/><span className="gold-text">التواصل معنا؟</span></h2>
                 <div className="gold-divider-right"/>
-                <p className="text-[#033500]/60 mt-4 leading-relaxed" style={{fontFamily:'Cairo,sans-serif'}}>
+                <p className="text-[var(--primary)]/60 mt-4 leading-relaxed" style={{fontFamily: 'var(--font-body)'}}>
                   فريقنا متاح لمساعدتك والإجابة على جميع استفساراتك. لا تتردد في التواصل معنا بأي وسيلة تناسبك.
                 </p>
               </div>
@@ -61,22 +80,22 @@ export default function ContactPage() {
                 <div
                   key={title}
                   className="flex items-start gap-4 p-5 rounded-2xl card-hover"
-                  style={{background:'white',border:'1px solid rgba(3, 53, 0,0.06)',boxShadow:'0 8px 30px rgba(3, 53, 0,0.06)'}}
+                  style={{background:'white',border:'1px solid rgba(var(--primary-rgb),0.06)',boxShadow:'0 8px 30px rgba(var(--primary-rgb),0.06)'}}
                 >
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{background:'linear-gradient(135deg,rgba(3, 53, 0,0.08),rgba(3, 53, 0,0.15))'}}>
-                    <Icon size={20} style={{color:'#033500'}}/>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{background:'linear-gradient(135deg,rgba(var(--primary-rgb),0.08),rgba(var(--primary-rgb),0.15))'}}>
+                    <Icon size={20} style={{color:'var(--primary)'}}/>
                   </div>
                   <div>
-                    <div className="font-bold text-sm mb-1" style={{fontFamily:'Cairo,sans-serif',color:'#033500'}}>{title}</div>
-                    <div className="font-semibold text-[#033500] text-sm" style={{fontFamily:'Cairo,sans-serif'}}>{info}</div>
-                    <div className="text-[#033500]/50 text-xs mt-1" style={{fontFamily:'Cairo,sans-serif'}}>{sub}</div>
+                    <div className="font-bold text-sm mb-1" style={{fontFamily: 'var(--font-body)',color:'var(--primary)'}}>{title}</div>
+                    <div className="font-semibold text-[var(--primary)] text-sm" style={{fontFamily: 'var(--font-body)'}}>{info}</div>
+                    <div className="text-[var(--primary)]/50 text-xs mt-1" style={{fontFamily: 'var(--font-body)'}}>{sub}</div>
                   </div>
                 </div>
               ))}
 
               {/* Social */}
-              <div className="p-6 rounded-2xl" style={{background:'linear-gradient(135deg,#065500,#033500)'}}>
-                <h3 className="font-bold text-white mb-4" style={{fontFamily:'Cairo,sans-serif'}}>تابعنا على السوشيال ميديا</h3>
+              <div className="p-6 rounded-2xl" style={{background:'linear-gradient(135deg,var(--info),var(--primary))'}}>
+                <h3 className="font-bold text-white mb-4" style={{fontFamily: 'var(--font-heading)'}}>تابعنا على السوشيال ميديا</h3>
                 <div className="flex gap-3 flex-wrap">
                   {['f', 't', 'in', 'yt', 'ig'].map((s) => (
                     <button key={s} className="social-icon text-xs font-bold">{s}</button>
@@ -87,19 +106,19 @@ export default function ContactPage() {
 
             {/* Contact Form */}
             <div className="lg:col-span-3">
-              <div className="rounded-3xl p-8 md:p-10 shadow-xl" style={{background:'white',border:'1px solid rgba(3, 53, 0,0.06)'}}>
+              <div className="rounded-3xl p-8 md:p-10 shadow-xl" style={{background:'white',border:'1px solid rgba(var(--primary-rgb),0.06)'}}>
                 {submitted ? (
                   <div className="text-center py-10">
-                    <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-gold" style={{background:'linear-gradient(135deg,#C9A84C,#C9A84C)'}}>
+                    <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-gold" style={{background:'linear-gradient(135deg,var(--gold),var(--gold))'}}>
                       <CheckCircle size={40} className="text-white"/>
                     </div>
-                    <h3 className="font-black text-2xl mb-3" style={{fontFamily:'Cairo,sans-serif',color:'#033500'}}>تم إرسال رسالتك! ✉️</h3>
-                    <p className="text-[#033500]/60 mb-8" style={{fontFamily:'Cairo,sans-serif'}}>شكراً لتواصلك معنا. سيرد عليك فريقنا خلال 24 ساعة.</p>
-                    <button className="btn-royal" onClick={() => setSubmitted(false)}>إرسال رسالة جديدة</button>
+                    <h3 className="font-black text-2xl mb-3" style={{fontFamily: 'var(--font-heading)',color:'var(--primary)'}}>تم إرسال رسالتك! ✉️</h3>
+                    <p className="text-[var(--primary)]/60 mb-8" style={{fontFamily: 'var(--font-body)'}}>شكراً لتواصلك معنا. سيرد عليك فريقنا خلال 24 ساعة.</p>
+                    <button className="btn-royal" onClick={() => { setSubmitted(false); setForm(EMPTY_FORM); }}>إرسال رسالة جديدة</button>
                   </div>
                 ) : (
                   <>
-                    <h3 className="font-black text-2xl mb-6" style={{fontFamily:'Cairo,sans-serif',color:'#033500'}}>أرسل لنا رسالة</h3>
+                    <h3 className="font-black text-2xl mb-6" style={{fontFamily: 'var(--font-heading)',color:'var(--primary)'}}>أرسل لنا رسالة</h3>
                     <form onSubmit={handleSubmit} className="space-y-5">
                       <div className="grid sm:grid-cols-2 gap-5">
                         <div>
@@ -169,14 +188,14 @@ export default function ContactPage() {
           <div className="map-container">
             <div
               className="rounded-2xl h-80 flex items-center justify-center"
-              style={{background:'linear-gradient(135deg,rgba(3, 53, 0,0.08),rgba(201, 168, 76,0.08))',border:'2px solid rgba(3, 53, 0,0.08)'}}
+              style={{background:'linear-gradient(135deg,rgba(var(--primary-rgb),0.08),rgba(var(--accent-rgb),0.08))',border:'2px solid rgba(var(--primary-rgb),0.08)'}}
             >
               <div className="text-center">
                 <div className="text-5xl mb-4">🗺️</div>
-                <h3 className="font-bold text-xl mb-2" style={{fontFamily:'Cairo,sans-serif',color:'#033500'}}>موقعنا على الخريطة</h3>
-                <p className="text-[#033500]/60" style={{fontFamily:'Cairo,sans-serif'}}>الرياض، حي العليا، برج الوليد، المملكة العربية السعودية</p>
+                <h3 className="font-bold text-xl mb-2" style={{fontFamily: 'var(--font-heading)',color:'var(--primary)'}}>موقعنا على الخريطة</h3>
+                <p className="text-[var(--primary)]/60" style={{fontFamily: 'var(--font-body)'}}>الرياض، حي العليا، برج الوليد، المملكة العربية السعودية</p>
                 <a
-                  href="https://maps.google.com"
+                  href="https://www.google.com/maps/search/?api=1&query=الرياض+حي+العليا"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block mt-4 btn-royal text-sm"

@@ -2,16 +2,17 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { SEO } from '@/components/SEO';
 
 const C = {
-  green: '#00833D',
-  greenDark: '#00612D',
-  ink: '#111110',
-  muted: '#5B5B56',
+  green: 'var(--primary)',
+  greenDark: 'var(--primary-light)',
+  ink: 'var(--text)',
+  muted: 'var(--text)',
   bg: '#FFFFFF',
-  bgSoft: '#F6F6F3',
-  border: '#E7E5DF',
+  bgSoft: 'var(--background)',
+  border: 'var(--border)',
 };
 
 const WIDE = "max-w-[1320px] w-full mx-auto px-6 md:px-10 lg:px-14";
@@ -42,14 +43,21 @@ export default function AboutPage() {
 
       {/* Hero */}
       <header className="relative h-[70vh] sm:h-[80vh] flex items-end overflow-hidden">
-        <motion.img
+        <motion.div
           initial={{ scale: 1.08 }}
           animate={{ scale: 1 }}
           transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-          src="https://res.cloudinary.com/wlkrtcrr/image/upload/v1785604741/alwaleed_philanthropy_0_ycmdfy.jpg"
-          alt="مؤسسة الوليد للإنسانية - نبذة عن المؤسسة"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
+          className="absolute inset-0"
+        >
+          <Image
+            src="https://res.cloudinary.com/wlkrtcrr/image/upload/v1785604741/alwaleed_philanthropy_0_ycmdfy.jpg"
+            alt="مؤسسة الوليد للإنسانية - نبذة عن المؤسسة"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+        </motion.div>
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(17,17,16,0.65), rgba(17,17,16,0.15) 55%, transparent 75%)' }} />
         <div className="absolute bottom-0 left-0 right-0 h-1" style={{ backgroundColor: C.green }} />
       </header>
@@ -63,7 +71,7 @@ export default function AboutPage() {
           transition={{ duration: 0.7 }}
         >
           <span className="text-xs font-black tracking-[0.2em]" style={{ color: C.green }}>من نحن</span>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight mt-4 mb-8" style={{ color: C.ink }}>
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight mt-4 mb-8" style={{ color: C.ink, fontFamily: 'var(--font-heading)' }}>
             كانت البداية قبل 45 سنة
           </h2>
           <p className="text-lg sm:text-xl leading-relaxed max-w-3xl mx-auto" style={{ color: C.muted }}>
@@ -94,7 +102,7 @@ export default function AboutPage() {
                     style={{ backgroundColor: C.bg, borderColor: C.green }}
                   />
                   <div className="text-3xl sm:text-4xl font-black tracking-tight mb-3" style={{ color: C.green }}>{item.year}</div>
-                  <h3 className="text-2xl sm:text-3xl font-black tracking-tight mb-4" style={{ color: C.ink }}>{item.title}</h3>
+                  <h3 className="text-2xl sm:text-3xl font-black tracking-tight mb-4" style={{ color: C.ink, fontFamily: 'var(--font-heading)' }}>{item.title}</h3>
                   <p className="text-base leading-relaxed whitespace-pre-line max-w-3xl" style={{ color: C.muted }}>
                     {item.desc}
                   </p>
@@ -131,15 +139,17 @@ export default function AboutPage() {
                 onMouseEnter={() => setHoveredIndex(i)}
                 onMouseLeave={() => setHoveredIndex(null)}
               >
-                <div className="relative w-full overflow-hidden rounded-lg">
-                  <img
+                <div className="relative w-full aspect-[4/3] overflow-hidden rounded-lg">
+                  <Image
                     src={member.image}
                     alt={member.name}
-                    className={`w-full aspect-[4/3] object-cover transition-all duration-500 ${hoveredIndex === i ? 'grayscale-0 scale-[1.03]' : 'grayscale'}`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className={`object-cover transition-all duration-500 ${hoveredIndex === i ? 'grayscale-0 scale-[1.03]' : 'grayscale'}`}
                   />
                   <div className="absolute bottom-0 left-0 right-0 h-1" style={{ backgroundColor: C.green }} />
                 </div>
-                <h3 className="font-black text-xl text-right" style={{ color: C.ink }}>{member.name}</h3>
+                <h3 className="font-black text-xl text-right" style={{ color: C.ink, fontFamily: 'var(--font-heading)' }}>{member.name}</h3>
               </motion.div>
             ))}
           </div>

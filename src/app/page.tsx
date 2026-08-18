@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { SEO } from '@/components/SEO';
 import { institutionalNewsData } from '@/data/institutionalNews';
 import { projects } from '@/data/content';
@@ -110,7 +111,7 @@ const marqueeStats = [...impactStats, ...impactStats];
 
 export default function HomePage() {
   return (
-    <div className="overflow-x-hidden font-cairo selection:bg-[#00833D]/20" style={{ backgroundColor: C.bg, color: C.ink }}>
+    <div className="overflow-x-hidden font-cairo selection:bg-[var(--primary)]/20" style={{ backgroundColor: C.bg, color: C.ink }}>
       <style>{`
         @keyframes ap-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .ap-marquee-track { animation: ap-marquee 26s linear infinite; }
@@ -162,12 +163,13 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="order-1 lg:order-2 relative">
-            <img
+          <div className="order-1 lg:order-2 relative h-[420px] sm:h-[480px]">
+            <Image
               src="https://res.cloudinary.com/wlkrtcrr/image/upload/v1785604741/alwaleed_philanthropy_0_ycmdfy.jpg"
               alt="مؤسسة الوليد للإنسانية"
-              className="w-full h-[420px] sm:h-[480px] object-cover rounded-lg"
-              loading="lazy"
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover rounded-lg"
             />
           </div>
         </div>
@@ -203,8 +205,8 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {projects.slice(0, 3).map((proj: any) => (
             <Link key={proj.id} href="/projects" className="group block">
-              <div className="rounded-lg overflow-hidden mb-5">
-                <img src={proj.image} alt={proj.title} className="w-full h-56 object-cover group-hover:scale-[1.03] transition-transform duration-500" loading="lazy" />
+              <div className="rounded-lg overflow-hidden mb-5 relative h-56">
+                <Image src={proj.image} alt={proj.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover group-hover:scale-[1.03] transition-transform duration-500" />
               </div>
               <div className="text-xs font-bold mb-2" style={{ color: C.green }}>{proj.category}</div>
               <h3 className="text-xl font-black leading-snug mb-2" style={{ color: C.ink }}>{proj.title}</h3>
@@ -242,8 +244,8 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {institutionalNewsData.slice(0, 3).map((item: any) => (
             <Link key={item.id} href="/news" className="group block">
-              <div className="rounded-lg overflow-hidden mb-5">
-                <img src={item.image} alt={item.title} className="w-full h-48 object-cover group-hover:scale-[1.03] transition-transform duration-500" loading="lazy" />
+              <div className="rounded-lg overflow-hidden mb-5 relative h-48">
+                <Image src={item.image} alt={item.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover group-hover:scale-[1.03] transition-transform duration-500" />
               </div>
               <div className="flex items-center gap-4 text-xs font-medium mb-2" style={{ color: C.muted }}>
                 <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" style={{ color: C.green }} />{item.date}</span>

@@ -4,19 +4,19 @@ import { ArrowLeft } from 'lucide-react';
 /* =============================================================
    DESIGN TOKENS
    Matched to the foundation's real brand: white field, deep
-   institutional green (#00833D from the live site's own
+   institutional green (var(--primary) from the live site's own
    theme-color), warm ink text. Light, spacious, editorial —
    not a dark "luxury" treatment.
    ============================================================= */
 export const C = {
-  green: '#00833D',
-  greenDark: '#00612D',
-  greenSoft: 'rgba(0,131,61,0.08)',
-  ink: '#111110',
-  muted: '#5B5B56',
+  green: 'var(--primary)',
+  greenDark: 'var(--primary-light)',
+  greenSoft: 'rgba(var(--primary-rgb),0.08)',
+  ink: 'var(--text)',
+  muted: 'var(--text)',
   bg: '#FFFFFF',
-  bgSoft: '#F6F6F3',
-  border: '#E7E5DF',
+  bgSoft: 'var(--background)',
+  border: 'var(--border)',
 };
 
 export const WIDE = 'max-w-[1320px] w-full mx-auto px-6 md:px-10 lg:px-14';
@@ -54,7 +54,7 @@ export function Kicker({
     >
       <div className="space-y-3 max-w-2xl">
         <Eyebrow>{eyebrow}</Eyebrow>
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.15] tracking-tight" style={{ color: C.ink }}>
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.15] tracking-tight" style={{ color: C.ink, fontFamily: 'var(--font-heading)' }}>
           {title}
         </h2>
         {description && (
@@ -109,7 +109,7 @@ export function SolidButton({
     <Link
       href={href}
       onClick={onClick}
-      className={`inline-flex items-center justify-center gap-2.5 rounded-md px-8 py-4 text-sm font-black transition-all duration-300 cursor-pointer hover:brightness-110 ${className}`}
+      className={`inline-flex items-center justify-center gap-2.5 rounded-[var(--radius-default)] px-8 py-4 text-sm font-black transition-all duration-300 cursor-pointer hover:brightness-110 ${className}`}
       style={{ backgroundColor: C.green, color: '#fff' }}
     >
       {children}

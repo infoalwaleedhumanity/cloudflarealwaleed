@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Menu, X, ChevronDown, Phone, Mail, Globe, Search } from 'lucide-react';
+import { Menu, X, ChevronDown, Phone, Mail, Search } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface NavDropdownItem {
   label: string;
@@ -16,10 +17,13 @@ interface NavItem {
   dropdown?: NavDropdownItem[];
 }
 
-interface HeaderProps {
-  currentPage?: string;
-  setCurrentPage?: (page: string) => void;
-}
+const CONTACT = {
+  phone: '+966 11 234 5678',
+  phoneHref: 'tel:+966112345678',
+  email: 'info@waleed-foundation.org',
+};
+
+const LOGO_URL = 'https://res.cloudinary.com/wlkrtcrr/image/upload/v1784572343/logo_vkbiil.png';
 
 const pageToPath: Record<string, string> = {
   home: '/',
@@ -74,11 +78,11 @@ const navItems: NavItem[] = [
   { label: 'تواصل معنا', page: 'contact' },
 ];
 
-export default function Header({ currentPage: propCurrentPage, setCurrentPage: propSetCurrentPage }: HeaderProps) {
+export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const activePage = propCurrentPage || resolveActivePage(pathname);
+  const activePage = resolveActivePage(pathname);
 
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -86,7 +90,6 @@ export default function Header({ currentPage: propCurrentPage, setCurrentPage: p
   const [progress, setProgress] = useState(0);
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [locale, setLocale] = useState<'ar' | 'en'>('ar');
   const dropdownRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -194,7 +197,7 @@ export default function Header({ currentPage: propCurrentPage, setCurrentPage: p
       e.preventDefault();
       const query = searchQuery.trim();
       if (!query) return;
-      router.push(`/search?q=${encodeURIComponent(query)}`);
+      router.push(`/news?q=${encodeURIComponent(query)}`);
       setShowSearch(false);
       setSearchQuery('');
     },
@@ -208,77 +211,61 @@ export default function Header({ currentPage: propCurrentPage, setCurrentPage: p
 
       {/* Main Header */}
       <header
-        className="fixed left-0 right-0 z-[999] transition-all duration-500 text-white"
+        className={`fixed left-0 right-0 z-[999] transition-all duration-500 ${
+          scrolled ? 'text-[var(--text-strong)]' : 'text-white'
+        }`}
         style={{
           top: '0',
-          background: scrolled ? 'rgba(2, 43, 18, 0.98)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(12px)' : 'none',
-          WebkitBackdropFilter: scrolled ? 'blur(12px)' : 'none',
+          backgroundColor: scrolled ? 'var(--surface)' : 'transparent',
           transform: 'translateZ(0)',
-          boxShadow: scrolled ? '0 4px 30px rgba(0,0,0,0.25), 0 1px 0 rgba(201, 168, 76,0.2)' : 'none',
+          boxShadow: scrolled ? '0 4px 20px rgba(0,0,0,0.08)' : 'none',
         }}
       >
         {/* Top Institutional Utility Bar */}
         <div
-          className={`hidden lg:block border-b transition-all duration-300 ${
-            scrolled ? 'py-1 bg-black/20 border-white/10' : 'py-2 bg-transparent border-white/15'
+          className={`hidden lg:block transition-all duration-300 border-b ${
+            scrolled ? 'py-1.5 bg-[var(--background)] border-[var(--border)]' : 'py-2 bg-transparent border-white/10'
           }`}
         >
-          <div className="max-w-[1600px] w-full mx-auto px-6 md:px-10 lg:px-14 flex items-center justify-between text-xs text-white/80 font-cairo">
+          <div className={`max-w-[1600px] w-full mx-auto px-[var(--page-x)] flex items-center justify-between text-xs font-cairo ${scrolled ? 'text-[var(--text)]' : 'text-white/90'}`}>
             {/* Contact numbers & mail */}
             <div className="flex items-center gap-6">
               <a
-                href="tel:+966112345678"
-                className="flex items-center gap-2 hover:text-[#C9A84C] transition-colors"
+                href={CONTACT.phoneHref}
+                className="flex items-center gap-2 hover:text-[var(--primary)] transition-colors py-0.5"
                 dir="ltr"
               >
-                <Phone size={13} className="text-[#C9A84C]" />
-                <span className="font-sans text-xs tracking-wider">+966 11 234 5678</span>
+                <Phone size={13} className="text-[var(--accent)] shrink-0" />
+                <span className="font-sans text-xs tracking-wider font-medium">{CONTACT.phone}</span>
               </a>
-              <span className="text-white/20">|</span>
+              <span className={scrolled ? 'text-[var(--border)]' : 'text-white/25'}>|</span>
               <a
-                href="mailto:info@waleed-foundation.org"
-                className="flex items-center gap-2 hover:text-[#C9A84C] transition-colors"
+                href={`mailto:${CONTACT.email}`}
+                className="flex items-center gap-2 hover:text-[var(--primary)] transition-colors py-0.5"
                 dir="ltr"
               >
-                <Mail size={13} className="text-[#C9A84C]" />
-                <span className="font-sans text-xs">info@waleed-foundation.org</span>
+                <Mail size={13} className="text-[var(--accent)] shrink-0" />
+                <span className="font-sans text-xs font-medium">{CONTACT.email}</span>
               </a>
-            </div>
-
-            {/* Language Switch */}
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setLocale((prev) => (prev === 'ar' ? 'en' : 'ar'))}
-                aria-pressed={locale === 'en'}
-                aria-label="تبديل اللغة"
-                className="flex items-center gap-1.5 hover:text-[#C9A84C] transition-colors py-0.5 px-2 rounded hover:bg-white/10 cursor-pointer"
-              >
-                <Globe size={13} className="text-[#C9A84C]" />
-                <span className={locale === 'ar' ? 'text-white' : 'text-white/60 font-sans'}>العربية</span>
-                <span className="text-white/40">|</span>
-                <span className={locale === 'en' ? 'text-white font-sans' : 'text-white/60 font-sans'}>English</span>
-              </button>
             </div>
           </div>
         </div>
 
         {/* Primary Navbar Container */}
-        <div className="max-w-[1600px] w-full mx-auto px-6 md:px-10 lg:px-14">
-          <div className="flex items-center justify-between py-3.5 md:py-4">
+        <div className="max-w-[1600px] w-full mx-auto px-[var(--page-x)]" style={{ minHeight: 'var(--header-height)' }}>
+          <div className="flex items-center justify-between h-full" style={{ minHeight: 'var(--header-height)' }}>
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group shrink-0">
-              <div className="transition-transform group-hover:scale-105">
-                <img
-                  src="https://res.cloudinary.com/wlkrtcrr/image/upload/v1784572343/logo_vkbiil.png"
+              <div className="transition-transform duration-300 group-hover:scale-102">
+                <Image
+                  src={LOGO_URL}
                   alt="مؤسسة الوليد للإنسانية"
-                  width={260}
-                  height={64}
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
-                  className="h-12 md:h-14 lg:h-16 max-h-16 w-auto max-w-[260px] md:max-w-[300px] object-contain brightness-0 invert drop-shadow-xl"
+                  width={320}
+                  height={80}
+                  priority
+                  className={`h-13 md:h-16 lg:h-18 max-h-20 w-auto max-w-[280px] md:max-w-[340px] lg:max-w-[380px] object-contain transition-all duration-300 ${
+                    scrolled ? '' : 'brightness-0 invert drop-shadow-lg'
+                  }`}
                 />
               </div>
             </Link>
@@ -296,15 +283,19 @@ export default function Header({ currentPage: propCurrentPage, setCurrentPage: p
                     <div>
                       <button
                         type="button"
-                        className="nav-link flex items-center gap-1 px-3.5 py-2 rounded-xl text-white/95 hover:text-white text-base font-semibold font-cairo transition-all hover:bg-white/10"
+                        className={`nav-link flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[15px] font-bold font-cairo transition-all cursor-pointer ${
+                          scrolled
+                            ? 'text-[var(--text-strong)] hover:text-[var(--primary)] hover:bg-[var(--primary)]/5'
+                            : 'text-white hover:text-[var(--accent)] hover:bg-white/10'
+                        }`}
                         onClick={() => setOpenDropdown(openDropdown === item.label ? null : item.label)}
                         aria-haspopup="true"
                         aria-expanded={openDropdown === item.label}
                       >
                         {item.label}
                         <ChevronDown
-                          size={14}
-                          className="transition-transform duration-300 opacity-80"
+                          size={15}
+                          className={`transition-transform duration-300 ${scrolled ? 'text-[var(--primary)]' : 'text-[var(--accent)]'}`}
                           style={{ transform: openDropdown === item.label ? 'rotate(180deg)' : 'rotate(0)' }}
                         />
                       </button>
@@ -315,9 +306,8 @@ export default function Header({ currentPage: propCurrentPage, setCurrentPage: p
                               key={sub.page}
                               href={pageToPath[sub.page] || '/'}
                               role="menuitem"
-                              className="dropdown-item w-full text-right font-medium"
+                              className="dropdown-item w-full text-right font-semibold"
                               onClick={() => {
-                                if (propSetCurrentPage) propSetCurrentPage(sub.page);
                                 setOpenDropdown(null);
                               }}
                             >
@@ -331,14 +321,15 @@ export default function Header({ currentPage: propCurrentPage, setCurrentPage: p
                     <Link
                       href={pageToPath[item.page!] || '/'}
                       aria-current={activePage === item.page ? 'page' : undefined}
-                      className={`nav-link px-3.5 py-2 rounded-xl text-base font-semibold font-cairo transition-all ${
+                      className={`nav-link px-3.5 py-2 rounded-xl text-[15px] font-bold font-cairo transition-all ${
                         activePage === item.page
-                          ? 'text-[#C9A84C] font-bold bg-white/10'
-                          : 'text-white/95 hover:text-white hover:bg-white/10'
+                          ? scrolled
+                            ? 'text-[var(--primary)] active font-bold bg-[var(--primary)]/8 shadow-sm'
+                            : 'text-[var(--accent)] active font-bold bg-white/15 shadow-sm'
+                          : scrolled
+                            ? 'text-[var(--text-strong)] hover:text-[var(--primary)] hover:bg-[var(--primary)]/5'
+                            : 'text-white hover:text-[var(--accent)] hover:bg-white/10'
                       }`}
-                      onClick={() => {
-                        if (propSetCurrentPage) propSetCurrentPage(item.page!);
-                      }}
                     >
                       {item.label}
                     </Link>
@@ -349,13 +340,10 @@ export default function Header({ currentPage: propCurrentPage, setCurrentPage: p
 
             {/* CTA & Search & Language Buttons */}
             <div className="hidden xl:flex items-center gap-3">
-              {/* Primary Golden CTA */}
+              {/* Primary Accent CTA */}
               <Link
                 href="/apply"
-                className="bg-gradient-to-r from-[#C9A84C] to-[#E2C366] text-[#022B12] font-extrabold text-base py-3 px-8 rounded-full hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_8px_25px_rgba(201,168,76,0.35)] flex items-center gap-2 font-cairo cursor-pointer"
-                onClick={() => {
-                  if (propSetCurrentPage) propSetCurrentPage('apply');
-                }}
+                className="bg-[var(--primary)] hover:bg-[var(--secondary)] text-white font-extrabold text-[15px] py-2.5 px-7 rounded-[var(--radius-default)] hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_6px_22px_rgba(var(--primary-rgb),0.35)] flex items-center gap-2 font-cairo cursor-pointer"
               >
                 <span>تقديم طلب</span>
               </Link>
@@ -364,7 +352,11 @@ export default function Header({ currentPage: propCurrentPage, setCurrentPage: p
               <button
                 type="button"
                 onClick={() => setShowSearch((prev) => !prev)}
-                className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white transition-all hover:scale-105 cursor-pointer"
+                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-105 cursor-pointer border ${
+                  scrolled
+                    ? 'bg-[var(--primary)]/5 hover:bg-[var(--primary)]/10 border-[var(--border)] text-[var(--text-strong)]'
+                    : 'bg-white/10 hover:bg-white/20 backdrop-blur-md border-white/20 text-white'
+                }`}
                 title="البحث"
                 aria-expanded={showSearch}
                 aria-label="فتح البحث"
@@ -376,21 +368,25 @@ export default function Header({ currentPage: propCurrentPage, setCurrentPage: p
             {/* Mobile Menu Button */}
             <button
               type="button"
-              className="xl:hidden w-11 h-11 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white transition-all hover:bg-white/20"
+              className={`xl:hidden w-11 h-11 rounded-[var(--radius-default)] border flex items-center justify-center transition-all cursor-pointer ${
+                scrolled
+                  ? 'bg-[var(--primary)]/5 hover:bg-[var(--primary)]/10 border-[var(--border)] text-[var(--text-strong)]'
+                  : 'bg-white/10 hover:bg-white/20 border-white/20 text-white'
+              }`}
               onClick={() => setMobileOpen((prev) => !prev)}
               aria-label={mobileOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
               aria-expanded={mobileOpen}
             >
-              {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </div>
 
         {/* Search Modal Bar */}
         {showSearch && (
-          <div className="bg-[#022B12]/95 border-b border-[#C9A84C]/30 backdrop-blur-xl py-4 px-6 transition-all duration-300">
+          <div className="bg-[var(--primary)] border-b border-white/20 backdrop-blur-xl py-4 px-6 transition-all duration-300">
             <form onSubmit={handleSearchSubmit} className="max-w-3xl mx-auto flex items-center gap-3">
-              <Search className="text-[#C9A84C] shrink-0" size={20} />
+              <Search className="text-[var(--accent)] shrink-0" size={20} />
               <input
                 ref={searchInputRef}
                 type="text"
@@ -399,7 +395,7 @@ export default function Header({ currentPage: propCurrentPage, setCurrentPage: p
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full bg-transparent text-white placeholder-white/50 text-base focus:outline-none font-cairo"
               />
-              <button type="submit" className="text-[#C9A84C] hover:text-white text-sm px-2 font-cairo cursor-pointer">
+              <button type="submit" className="text-[var(--accent)] hover:text-white text-sm px-2 font-cairo cursor-pointer">
                 بحث
               </button>
               <button
@@ -420,19 +416,23 @@ export default function Header({ currentPage: propCurrentPage, setCurrentPage: p
       {/* Mobile Menu */}
       <div className={`mobile-menu ${mobileOpen ? 'open' : ''}`} ref={mobileMenuRef}>
         <div className="p-6">
-          {/* Logo */}
-          <div className="flex items-center gap-3 mb-8 pb-6 border-b border-white/10">
-            <div className="p-2">
-              <img
-                src="https://res.cloudinary.com/wlkrtcrr/image/upload/v1784572343/logo_vkbiil.png"
-                alt="مؤسسة الوليد للإنسانية"
-                width={200}
-                height={48}
-                loading="lazy"
-                decoding="async"
-                className="h-12 max-h-12 w-auto max-w-[200px] object-contain brightness-0 invert drop-shadow-lg"
-              />
-            </div>
+          {/* Logo & Close Button */}
+          <div className="flex items-center justify-between gap-3 mb-6 pb-5 border-b border-white/15">
+            <Image
+              src={LOGO_URL}
+              alt="مؤسسة الوليد للإنسانية"
+              width={220}
+              height={55}
+              className="h-12 max-h-13 w-auto max-w-[210px] object-contain brightness-0 invert drop-shadow-md"
+            />
+            <button
+              type="button"
+              onClick={() => setMobileOpen(false)}
+              className="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all cursor-pointer shrink-0"
+              aria-label="إغلاق القائمة"
+            >
+              <X size={20} />
+            </button>
           </div>
 
           {/* Nav Items */}
@@ -443,27 +443,26 @@ export default function Header({ currentPage: propCurrentPage, setCurrentPage: p
                   <div>
                     <button
                       type="button"
-                      className="w-full text-right text-white/80 font-semibold text-sm py-3 px-4 rounded-xl font-cairo transition-all hover:bg-white/10 hover:text-[#C9A84C] flex items-center justify-between"
+                      className="w-full text-right text-white font-bold text-base py-3 px-4 rounded-xl font-cairo transition-all hover:bg-white/10 hover:text-[var(--accent)] flex items-center justify-between"
                       onClick={() => setOpenDropdown(openDropdown === item.label ? null : item.label)}
                       aria-haspopup="true"
                       aria-expanded={openDropdown === item.label}
                     >
                       {item.label}
                       <ChevronDown
-                        size={14}
-                        className="transition-transform duration-300"
+                        size={16}
+                        className="transition-transform duration-300 text-[var(--accent)]"
                         style={{ transform: openDropdown === item.label ? 'rotate(180deg)' : 'rotate(0)' }}
                       />
                     </button>
                     {openDropdown === item.label && (
-                      <div className="mr-4 border-r-2 border-[#C9A84C]/30 pr-4 mt-1 space-y-1">
+                      <div className="mr-4 border-r-2 border-[var(--accent)]/40 pr-4 mt-1 space-y-1">
                         {item.dropdown.map((sub) => (
                           <Link
                             key={sub.page}
                             href={pageToPath[sub.page] || '/'}
-                            className="block w-full text-right text-white/60 text-sm py-2 px-3 rounded-lg font-cairo transition-all hover:text-[#C9A84C]"
+                            className="block w-full text-right text-white/90 font-semibold text-sm py-2 px-3 rounded-lg font-cairo transition-all hover:text-[var(--accent)] hover:bg-white/10"
                             onClick={() => {
-                              if (propSetCurrentPage) propSetCurrentPage(sub.page);
                               setMobileOpen(false);
                             }}
                           >
@@ -477,13 +476,12 @@ export default function Header({ currentPage: propCurrentPage, setCurrentPage: p
                   <Link
                     href={pageToPath[item.page!] || '/'}
                     aria-current={activePage === item.page ? 'page' : undefined}
-                    className={`block w-full text-right font-medium text-sm py-3 px-4 rounded-xl font-cairo transition-all ${
+                    className={`block w-full text-right font-bold text-base py-3 px-4 rounded-xl font-cairo transition-all ${
                       activePage === item.page
-                        ? 'bg-[#C9A84C]/20 text-[#C9A84C]'
-                        : 'text-white/80 hover:bg-white/10 hover:text-[#C9A84C]'
+                        ? 'bg-white/20 text-[var(--accent)]'
+                        : 'text-white hover:bg-white/10 hover:text-[var(--accent)]'
                     }`}
                     onClick={() => {
-                      if (propSetCurrentPage) propSetCurrentPage(item.page!);
                       setMobileOpen(false);
                     }}
                   >
@@ -500,7 +498,6 @@ export default function Header({ currentPage: propCurrentPage, setCurrentPage: p
               href="/apply"
               className="btn-primary w-full justify-center text-sm text-center"
               onClick={() => {
-                if (propSetCurrentPage) propSetCurrentPage('apply');
                 setMobileOpen(false);
               }}
             >
@@ -511,18 +508,18 @@ export default function Header({ currentPage: propCurrentPage, setCurrentPage: p
           {/* Contact Info */}
           <div className="mt-6 space-y-3">
             <a
-              href="tel:+966112345678"
+              href={CONTACT.phoneHref}
               className="flex items-center gap-3 text-white/50 hover:text-white/80 transition-colors text-sm"
             >
               <Phone size={14} />
-              <span className="font-cairo">+966 11 234 5678</span>
+              <span className="font-cairo">{CONTACT.phone}</span>
             </a>
             <a
-              href="mailto:info@waleed-foundation.org"
+              href={`mailto:${CONTACT.email}`}
               className="flex items-center gap-3 text-white/50 hover:text-white/80 transition-colors text-sm"
             >
               <Mail size={14} />
-              <span className="font-cairo">info@waleed-foundation.org</span>
+              <span className="font-cairo">{CONTACT.email}</span>
             </a>
           </div>
         </div>

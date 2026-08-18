@@ -34,7 +34,7 @@ export default function Pillars({ items }: { items: Pillar[] }) {
           >
             <IconComponent className="w-6 h-6 shrink-0 mt-1" style={{ color: C.green }} />
             <div>
-              <h3 className="text-lg font-black mb-1.5" style={{ color: C.ink }}>
+              <h3 className="text-lg font-black mb-1.5" style={{ color: C.ink, fontFamily: 'var(--font-heading)' }}>
                 {item.title}
               </h3>
               <p className="text-sm leading-relaxed" style={{ color: C.muted }}>

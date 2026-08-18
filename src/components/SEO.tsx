@@ -11,7 +11,7 @@ export function SEO({ title, description, type = 'website', url, image, jsonLd }
   const siteName = 'مؤسسة الوليد للإنسانية';
   const fullTitle = `${title} | ${siteName}`;
 
-  const origin = 'https://alwaleed.org';
+  const origin = 'https://waleed-foundation.org';
 
   const defaultJsonLd = {
     '@context': 'https://schema.org',
